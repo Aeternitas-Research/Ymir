@@ -7,6 +7,7 @@ from pathlib import Path
 class Gkeyll:
     def __init__(self, config):
         self.config = config
+        self.root = Path(self.config["root"]).expanduser()
 
     def patch(self):
         pass
@@ -35,7 +36,7 @@ class Gkeyll:
         r = subprocess.run(
             f"./configure",
             shell=True,
-            cwd=Path(self.config["root"]).expanduser(),
+            cwd=self.root,
             env=env,
         )
         if r.returncode:
