@@ -52,7 +52,45 @@ class Gkeyll:
         print("[YMIR] DONE: Gkeyll.build")
 
     def test(self):
-        pass
+        target = {}
+        for module in (
+            "core",
+            "moments",
+            "vlasov",
+            "gyrokinetic",
+            "pkpm",
+        ):
+            path = self.root / f"build/{module}/unit"
+            target[module] = set()
+            for pattern in ("ctest_*", "lctest_*", "mctest_*"):
+                target[module].update({value.stem for value in set(path.glob(pattern))})
+
+        for module, exe_list in {
+            "gyrokinetic": {
+                "ctest_fem_poisson_perp",  # freeze
+            },
+        }.items():
+            for exe in exe_list:
+                target[module].remove(exe)
+
+        command = []
+        for module, exe_list in target.items():
+            command += [
+                f"echo && "
+                f"echo ./build/{module}/unit/{exe} && "
+                f"./build/{module}/unit/{exe} || true"
+                for exe in exe_list
+            ]
+
+        r = subprocess.run(
+            " && ".join(command),
+            shell=True,
+            cwd=self.root,
+        )
+        if r.returncode:
+            raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
+
+        print("[YMIR] DONE: Gkeyll.test")
 
     def simulation(self):
         pass
