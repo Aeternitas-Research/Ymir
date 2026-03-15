@@ -1,0 +1,40 @@
+import argparse
+from .config import Config
+from .version import get_version
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="ymir",
+        description="",
+        epilog="",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("-i", "--input", help="set input file", default="ymir.toml")
+
+    subparser = parser.add_subparsers(dest="command", help="commands")
+    parser_info = subparser.add_parser("info", help="show general info")
+    parser_build = subparser.add_parser("build", help="build backend")
+
+    parser_info.add_argument(
+        "-v", "--verbose", action="store_true", help="show verbose info"
+    )
+
+    arg = parser.parse_args()
+    arg.config = Config(arg.input)
+
+    if not arg.command:
+        parser.print_help()
+    elif arg.command == "info":
+        print(f"Ymir {get_version()}")
+
+        from .command import info
+
+        info.main(arg)
+    elif arg.command == "build":
+        from .command import build
+
+        build.main(arg)
+
+
+__all__ = ["main"]

@@ -1,0 +1,11 @@
+YMIR_VERSION_MAJOR = 0
+YMIR_VERSION_MINOR = 1
+YMIR_VERSION_PATCH = 0
+YMIR_VERSION = f"v{YMIR_VERSION_MAJOR}.{YMIR_VERSION_MINOR}.{YMIR_VERSION_PATCH}"
+
+
+def get_version():
+    return YMIR_VERSION
+
+
+__all__ = ["get_version"]

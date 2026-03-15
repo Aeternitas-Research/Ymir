@@ -1,0 +1,13 @@
+[version]
+min = 0.1.0
+max = 0.1.0
+
+[backend.use]
+gkeyll = true
+hermes3 = true
+
+[backend.config.gkeyll]
+root = "~/tmp/Ymir/repo/gkeyll"
+
+[backend.config.hermes3]
+root = "~/tmp/Ymir/repo/hermes-3"
