@@ -33,21 +33,31 @@ class Gkeyll:
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
-        r = subprocess.run(
-            f"./configure",
-            shell=True,
-            cwd=self.root,
-            env=env,
-        )
-        if r.returncode:
-            raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
+        with (
+            open("build.gkeyll.out.txt", "w") as file_output,
+            open("build.gkeyll.err.txt", "w") as file_error,
+        ):
+            r = subprocess.run(
+                f"./configure",
+                shell=True,
+                cwd=self.root,
+                env=env,
+                stdout=file_output,
+                stderr=file_error,
+            )
+            if r.returncode:
+                raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
-        n = multiprocessing.cpu_count()
-        r = subprocess.run(
-            f"make -j{n} -C {self.config["root"]} all", shell=True, env=env
-        )
-        if r.returncode:
-            raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
+            n = multiprocessing.cpu_count()
+            r = subprocess.run(
+                f"make -j{n} -C {self.config["root"]} all",
+                shell=True,
+                env=env,
+                stdout=file_output,
+                stderr=file_error,
+            )
+            if r.returncode:
+                raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
         print("[YMIR] DONE: Gkeyll.build")
 
@@ -82,13 +92,19 @@ class Gkeyll:
                 for exe in exe_list
             ]
 
-        r = subprocess.run(
-            " && ".join(command),
-            shell=True,
-            cwd=self.root,
-        )
-        if r.returncode:
-            raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
+        with (
+            open("test.gkeyll.out.txt", "w") as file_output,
+            open("test.gkeyll.err.txt", "w") as file_error,
+        ):
+            r = subprocess.run(
+                " && ".join(command),
+                shell=True,
+                cwd=self.root,
+                stdout=file_output,
+                stderr=file_error,
+            )
+            if r.returncode:
+                raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
 
         print("[YMIR] DONE: Gkeyll.test")
 
