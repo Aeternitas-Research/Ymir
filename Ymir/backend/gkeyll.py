@@ -15,7 +15,23 @@ class Gkeyll:
         pass
 
     def clean(self):
-        pass
+        self.logger.info("START: Gkeyll.clean")
+
+        with (
+            open("clean.gkeyll.out.txt", "w") as file_output,
+            open("clean.gkeyll.err.txt", "w") as file_error,
+        ):
+            n = multiprocessing.cpu_count()
+            r = subprocess.run(
+                f"make -j{n} -C {self.config["root"]} clean",
+                shell=True,
+                stdout=file_output,
+                stderr=file_error,
+            )
+            if r.returncode:
+                raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
+
+        self.logger.info("STOP: Gkeyll.clean")
 
     def build(self):
         self.logger.info("START: Gkeyll.build")
