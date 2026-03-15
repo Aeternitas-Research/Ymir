@@ -15,6 +15,7 @@ def main():
     subparser = parser.add_subparsers(dest="command", help="commands")
     parser_info = subparser.add_parser("info", help="show general info")
     parser_build = subparser.add_parser("build", help="build backend")
+    parser_test = subparser.add_parser("test", help="run tests")
 
     parser_info.add_argument(
         "-v", "--verbose", action="store_true", help="show verbose info"
@@ -35,6 +36,10 @@ def main():
         from .command import build
 
         build.main(arg)
+    elif arg.command == "test":
+        from .command import test
+
+        test.main(arg)
 
 
 __all__ = ["main"]
