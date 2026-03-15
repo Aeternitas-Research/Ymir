@@ -1,3 +1,4 @@
+import logging
 import argparse
 from .config import Config
 from .version import get_version
@@ -24,6 +25,16 @@ def main():
     arg = parser.parse_args()
     arg.config = Config(arg.input)
 
+    logging.basicConfig(
+        filename="ymir.log",
+        format="%(asctime)s [%(levelname)s:%(name)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.DEBUG,
+    )
+
+    logger = logging.getLogger(__name__)
+    logger.info("START: main")
+
     if not arg.command:
         parser.print_help()
     elif arg.command == "info":
@@ -40,6 +51,8 @@ def main():
         from .command import test
 
         test.main(arg)
+
+    logger.info("STOP: main")
 
 
 __all__ = ["main"]
