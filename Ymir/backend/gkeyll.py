@@ -1,3 +1,4 @@
+import logging
 import multiprocessing
 import os
 import subprocess
@@ -6,6 +7,7 @@ from pathlib import Path
 
 class Gkeyll:
     def __init__(self, config):
+        self.logger = logging.getLogger(__name__)
         self.config = config
         self.root = Path(self.config["root"]).expanduser()
 
@@ -16,6 +18,8 @@ class Gkeyll:
         pass
 
     def build(self):
+        self.logger.info("START: Gkeyll.build")
+
         SUPERLU_INC_DIR = subprocess.run(
             "pkg-config --cflags-only-I superlu",
             capture_output=True,
@@ -59,9 +63,11 @@ class Gkeyll:
             if r.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
-        print("[YMIR] DONE: Gkeyll.build")
+        self.logger.info("STOP: Gkeyll.build")
 
     def test(self):
+        self.logger.info("START: Gkeyll.test")
+
         target = {}
         for module in (
             "core",
@@ -106,7 +112,7 @@ class Gkeyll:
             if r.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
 
-        print("[YMIR] DONE: Gkeyll.test")
+        self.logger.info("STOP: Gkeyll.test")
 
     def simulation(self):
         pass
