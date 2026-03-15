@@ -15,6 +15,7 @@ def main():
 
     subparser = parser.add_subparsers(dest="command", help="commands")
     parser_info = subparser.add_parser("info", help="show general info")
+    parser_clean = subparser.add_parser("clean", help="remove backend")
     parser_build = subparser.add_parser("build", help="build backend")
     parser_test = subparser.add_parser("test", help="run tests")
 
@@ -43,6 +44,10 @@ def main():
         from .command import info
 
         info.main(arg)
+    elif arg.command == "clean":
+        from .command import clean
+
+        clean.main(arg)
     elif arg.command == "build":
         from .command import build
 
