@@ -70,15 +70,19 @@ class Config:
                 self.backend[key]["use"] = value
         for key, config in self.raw["backend"]["config"].items():
             if key in BACKEND:
+                # info
                 self.backend[key]["root"] = Path(config["root"])
                 self.backend[key]["version"] = find_version(
                     key, self.backend[key]["root"]
                 )
 
+                # toolchain
                 config["toolchain"] = copy.copy(self.toolchain)
 
+                # install
                 config["install"] = self.raw["backend"]["install"]
 
+                # stage
                 self.backend[key]["stage"] = get_backend(key, config)
 
 
