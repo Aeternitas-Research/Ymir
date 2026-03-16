@@ -21,7 +21,18 @@ class GACODE:
             open("patch.gacode.out.txt", "wb") as file_output,
             open("patch.gacode.err.txt", "wb") as file_error,
         ):
-            if tag == "build.fftw":
+            if tag == "build.gyro":
+                process = apply_patch(
+                    "gacode.build.gyro",
+                    self.root,
+                    file_output,
+                    file_error,
+                )
+                process.wait()
+                if process.returncode:
+                    self.logger.warning(f"Patch `{tag}` not applied")
+                    raise RuntimeError("[YMIR] FAIL: GACODE.patch")
+            elif tag == "build.fftw":
                 file_target = self.root / "platform/build/make.inc.GFORTRAN_OSX_BREW"
                 if not check_patch(file_target, "78755cae"):
                     self.logger.warning(f"Patch `{tag}` not applied")
@@ -115,6 +126,7 @@ class GACODE:
         env = self.setup_env()
 
         if env["GACODE_PLATFORM"] == "GFORTRAN_OSX_BREW":
+            self.patch("build.gyro")
             self.patch("build.fftw")
 
         if self.config["toolchain"]["mpi"]["type"] == "mpich":
