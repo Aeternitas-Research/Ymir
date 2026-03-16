@@ -9,6 +9,9 @@ generator = "ninja"
 gkeyll = true
 hermes3 = true
 
+[backend.install]
+prefix = "~/tmp/Ymir"
+
 [backend.config.gkeyll]
 root = "~/tmp/Ymir/repo/gkeyll"
 

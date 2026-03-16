@@ -77,6 +77,8 @@ class Config:
 
                 config["toolchain"] = copy.copy(self.toolchain)
 
+                config["install"] = self.raw["backend"]["install"]
+
                 self.backend[key]["stage"] = get_backend(key, config)
 
 

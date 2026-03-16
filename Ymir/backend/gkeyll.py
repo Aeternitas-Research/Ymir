@@ -126,7 +126,7 @@ class Gkeyll:
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
-        prefix = self.root / "build/gkylsoft"
+        prefix = Path(self.config["install"]["prefix"]).expanduser()
 
         with (
             open("build.gkeyll.out.txt", "wb") as file_output,
