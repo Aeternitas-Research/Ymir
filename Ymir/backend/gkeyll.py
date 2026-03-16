@@ -3,7 +3,7 @@ import multiprocessing
 import os
 import subprocess
 from pathlib import Path
-from .tool import dispatch_process
+from .tool import dispatch_process, check_patch, apply_patch
 
 
 class Gkeyll:
@@ -12,12 +12,49 @@ class Gkeyll:
         self.config = config
         self.root = Path(self.config["root"]).expanduser()
 
-    def patch(self):
-        pass
+    def patch(self, tag):
+        self.logger.info(f"START: Gkeyll.patch ({tag})")
+
+        if tag == "build.mpich":
+            with (
+                open("patch.gkeyll.out.txt", "wb") as file_output,
+                open("patch.gkeyll.err.txt", "wb") as file_error,
+            ):
+                file_target = self.root / "gkeyll/lua/Comm/gkyl_mpi_macros.h"
+                if not check_patch(file_target, "470ea4518"):
+                    file_error.write(b"Invalid target hash. Stop.")
+                    return
+
+                process = apply_patch(
+                    "gkeyll.build.mpich",
+                    self.root,
+                    file_output,
+                    file_error,
+                )
+
+                process.wait()
+                if process.returncode:
+                    raise RuntimeError("[YMIR] FAIL: Gkeyll.patch")
+        else:
+            file_error.write(b"Invalid tag. Stop.")
+            raise RuntimeError("[YMIR] FAIL: Gkeyll.patch")
+
+        self.logger.info(f"STOP: Gkeyll.patch ({tag})")
 
     def clean(self):
         self.logger.info("START: Gkeyll.clean")
 
+        # restore source files
+        target = "gkeyll/lua/Comm/gkyl_mpi_macros.h"
+        r = subprocess.run(
+            f"git restore {target}",
+            shell=True,
+            cwd=self.root,
+        )
+        if r.returncode:
+            raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
+
+        # remove build
         with (
             open("clean.gkeyll.out.txt", "wb") as file_output,
             open("clean.gkeyll.err.txt", "wb") as file_error,
@@ -53,6 +90,9 @@ class Gkeyll:
         )
         CONF_MPI_INC_DIR = [s for s in mpi_command if s[:2] == "-I"][0][2:]
         CONF_MPI_LIB_DIR = [s for s in mpi_command if s[:2] == "-L"][0][2:]
+
+        if "mpich" in CONF_MPI_LIB_DIR:
+            self.patch("build.mpich")
 
         # Lua
         CONF_LUA_INC_DIR = subprocess.run(
