@@ -179,12 +179,14 @@ class Hermes3:
     def test(self):
         self.logger.info("START: Hermes3.test")
 
+        command = "ctest --test-dir build || true"
+
         with (
             open("test.hermes3.out.txt", "wb") as file_output,
             open("test.hermes3.err.txt", "wb") as file_error,
         ):
             process = subprocess.Popen(
-                "ctest --test-dir build || true",
+                command,
                 shell=True,
                 cwd=self.root,
                 stdout=subprocess.PIPE,
