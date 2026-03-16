@@ -4,6 +4,7 @@ import tomllib
 from pathlib import Path
 
 BACKEND = (
+    "gacode",
     "gkeyll",
     "hermes3",
 )
@@ -29,7 +30,11 @@ def find_version(handle, root):
 
 
 def get_backend(handle, config):
-    if handle == "gkeyll":
+    if handle == "gacode":
+        from .backend.gacode import GACODE
+
+        return GACODE(config)
+    elif handle == "gkeyll":
         from .backend.gkeyll import Gkeyll
 
         return Gkeyll(config)

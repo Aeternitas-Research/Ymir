@@ -1,10 +1,15 @@
 Ymir
 
 Available backends:
+- GACODE: https://github.com/gafusion/gacode
 - Gkeyll: https://github.com/ammarhakim/gkeyll
 - Hermes-3: https://github.com/boutproject/hermes-3
 
 Dependencies:
+- GACODE:
+  - fftw: https://packages.spack.io/package.html?name=fftw
+  - netcdf-fortran: https://packages.spack.io/package.html?name=netcdf-fortran
+  - openblas: https://packages.spack.io/package.html?name=openblas
 - Gkeyll:
   - MPI
   - lua-luajit: https://packages.spack.io/package.html?name=lua-luajit

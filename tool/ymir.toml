@@ -15,11 +15,19 @@ compiler = "/opt/homebrew/opt/llvm/bin/clang++"
 generator = "ninja"
 
 [backend.use]
+gacode = true
 gkeyll = true
 hermes3 = true
 
 [backend.install]
 prefix = "~/tmp/Ymir"
+
+[backend.config.gacode]
+root = "~/tmp/Ymir/repo/gacode"
+env.GACODE_PLATFORM = "GFORTRAN_OSX_BREW"
+env.BREW_LIB = "/opt/homebrew/lib"
+env.FFTW_INC = "/opt/homebrew/include"
+env.NETCDF_INC = "/opt/homebrew/include"
 
 [backend.config.gkeyll]
 root = "~/tmp/Ymir/repo/gkeyll"

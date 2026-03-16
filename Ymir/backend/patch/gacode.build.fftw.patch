@@ -1,0 +1,13 @@
+diff --git a/platform/build/make.inc.GFORTRAN_OSX_BREW b/platform/build/make.inc.GFORTRAN_OSX_BREW
+index 78755cae..4edbd009 100644
+--- a/platform/build/make.inc.GFORTRAN_OSX_BREW
++++ b/platform/build/make.inc.GFORTRAN_OSX_BREW
+@@ -24,7 +24,7 @@ FDEBUG	= -Wall -g -fcheck=all -fbacktrace -fbounds-check -O0 -Wextra -finit-real
+ 
+ # System libraries
+ 
+-LMATH = -L$(BREW_LIB) -lfftw3
++LMATH = -L$(BREW_LIB) -lfftw3 -lfftw3f
+ NETCDF = -L$(BREW_LIB) -lnetcdff -lnetcdf
+ 
+ # Archive
