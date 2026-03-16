@@ -251,7 +251,6 @@ class Gkeyll:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
                 self.logger.error("Stage `test` failed")
