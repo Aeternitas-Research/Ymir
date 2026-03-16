@@ -3,13 +3,22 @@ min = "0.1.0"
 max = "0.1.0"
 
 [toolchain.fortran]
-compiler = "/opt/homebrew/bin/gfortran"
+compiler.f77 = "/opt/homebrew/bin/gfortran"
+compiler.f90 = "/opt/homebrew/bin/gfortran"
 
 [toolchain.c]
 compiler = "/opt/homebrew/opt/llvm/bin/clang"
 
 [toolchain.cpp]
 compiler = "/opt/homebrew/opt/llvm/bin/clang++"
+
+[toolchain.mpi]
+type = "mpich"
+compiler.f77 = "/opt/homebrew/bin/mpif77"
+compiler.f90 = "/opt/homebrew/bin/mpif90"
+compiler.c = "/opt/homebrew/bin/mpicc"
+compiler.cpp = "/opt/homebrew/bin/mpicxx"
+exec = "/opt/homebrew/bin/mpirun"
 
 [toolchain.cmake]
 generator = "ninja"
