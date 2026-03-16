@@ -74,7 +74,9 @@ class Config:
                 self.backend[key]["version"] = find_version(
                     key, self.backend[key]["root"]
                 )
+
                 config["toolchain"] = copy.copy(self.toolchain)
+
                 self.backend[key]["stage"] = get_backend(key, config)
 
 
