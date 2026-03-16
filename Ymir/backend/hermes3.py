@@ -35,6 +35,9 @@ class Hermes3:
                 process.wait()
                 if process.returncode:
                     raise RuntimeError("[YMIR] FAIL: Hermes3.patch")
+        else:
+            file_error.write(b"Invalid tag. Stop.")
+            raise RuntimeError("[YMIR] FAIL: Hermes3.patch")
 
         self.logger.info(f"STOP: Hermes3.patch ({tag})")
 
