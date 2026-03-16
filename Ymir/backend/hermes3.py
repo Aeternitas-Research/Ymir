@@ -90,7 +90,7 @@ class Hermes3:
         compiler = {
             "cpp": self.config["toolchain"]["cpp"]["compiler"],
         }
-        prefix = Path(self.config["install"]["prefix"]).expanduser()
+        prefix = Path(self.config["install"]["prefix"]).expanduser() / "hermes3"
 
         with (
             open("build.hermes3.out.txt", "wb") as file_output,
