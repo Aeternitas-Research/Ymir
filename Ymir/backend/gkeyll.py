@@ -126,23 +126,29 @@ class Gkeyll:
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
+        compiler = {
+            "c": self.config["toolchain"]["c"]["compiler"],
+        }
         prefix = Path(self.config["install"]["prefix"]).expanduser()
 
         with (
             open("build.gkeyll.out.txt", "wb") as file_output,
             open("build.gkeyll.err.txt", "wb") as file_error,
         ):
-            option = [
-                f"--prefix={prefix}",
-                "--use-mpi=yes",
-                f"--mpi-inc={CONF_MPI_INC_DIR}",
-                f"--mpi-lib={CONF_MPI_LIB_DIR}",
-                "--use-lua=yes",
-                f"--lua-inc={CONF_LUA_INC_DIR}",
-                f"--lua-lib={CONF_LUA_LIB_DIR}",
-            ]
+            option = " ".join(
+                [
+                    f"CC={compiler["c"]}",
+                    f"--prefix={prefix}",
+                    "--use-mpi=yes",
+                    f"--mpi-inc={CONF_MPI_INC_DIR}",
+                    f"--mpi-lib={CONF_MPI_LIB_DIR}",
+                    "--use-lua=yes",
+                    f"--lua-inc={CONF_LUA_INC_DIR}",
+                    f"--lua-lib={CONF_LUA_LIB_DIR}",
+                ]
+            )
             process = subprocess.Popen(
-                f"./configure {' '.join(option)}",
+                f"./configure {option}",
                 shell=True,
                 cwd=self.root,
                 env=env,

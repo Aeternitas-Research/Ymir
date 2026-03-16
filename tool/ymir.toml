@@ -2,6 +2,15 @@
 min = "0.1.0"
 max = "0.1.0"
 
+[toolchain.fortran]
+compiler = "/opt/homebrew/bin/gfortran"
+
+[toolchain.c]
+compiler = "/opt/homebrew/opt/llvm/bin/clang"
+
+[toolchain.cpp]
+compiler = "/opt/homebrew/opt/llvm/bin/clang++"
+
 [toolchain.cmake]
 generator = "ninja"
 

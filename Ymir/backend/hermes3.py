@@ -81,6 +81,11 @@ class Hermes3:
 
         env = os.environ.copy()
 
+        compiler = {
+            "cpp": self.config["toolchain"]["cpp"]["compiler"],
+        }
+        prefix = Path(self.config["install"]["prefix"]).expanduser()
+
         with (
             open("build.hermes3.out.txt", "wb") as file_output,
             open("build.hermes3.err.txt", "wb") as file_error,
@@ -88,8 +93,19 @@ class Hermes3:
             flag_generator = ""
             if self.config["toolchain"]["cmake"]["generator"] == "ninja":
                 flag_generator = "-GNinja"
+
+            option = " ".join(
+                [
+                    "-S .",
+                    "-B build",
+                    flag_generator,
+                    f"-DCMAKE_CXX_COMPILER={compiler["cpp"]}",
+                    f"-DCMAKE_INSTALL_PREFIX={prefix}",
+                    "-DBOUT_DOWNLOAD_SUNDIALS=ON",
+                ]
+            )
             process = subprocess.Popen(
-                f"cmake . -B build {flag_generator} -DBOUT_DOWNLOAD_SUNDIALS=ON",
+                f"cmake {option}",
                 shell=True,
                 cwd=self.root,
                 env=env,
@@ -104,7 +120,7 @@ class Hermes3:
 
             exe = self.find_build_exe()
             process = subprocess.Popen(
-                f"{exe} -C {self.root}/build all",
+                f"{exe} -C {self.root}/build all install",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
