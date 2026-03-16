@@ -53,6 +53,19 @@ class Gkeyll:
             text=True,
         ).stdout.strip()[2:]
 
+        CONF_LUA_INC_DIR = subprocess.run(
+            "pkg-config --cflags-only-I lua",
+            capture_output=True,
+            shell=True,
+            text=True,
+        ).stdout.strip()[2:]
+        CONF_LUA_LIB_DIR = subprocess.run(
+            "pkg-config --libs-only-L lua",
+            capture_output=True,
+            shell=True,
+            text=True,
+        ).stdout.strip()[2:]
+
         env = os.environ.copy()
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
@@ -61,8 +74,13 @@ class Gkeyll:
             open("build.gkeyll.out.txt", "wb") as file_output,
             open("build.gkeyll.err.txt", "wb") as file_error,
         ):
+            option = [
+                "--use-lua=yes",
+                f"--lua-inc={CONF_LUA_INC_DIR}",
+                f"--lua-lib={CONF_LUA_LIB_DIR}",
+            ]
             process = subprocess.Popen(
-                "./configure",
+                f"./configure {' '.join(option)}",
                 shell=True,
                 cwd=self.root,
                 env=env,
