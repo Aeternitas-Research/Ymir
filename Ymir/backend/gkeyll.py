@@ -135,6 +135,7 @@ class Gkeyll:
             open("build.gkeyll.out.txt", "wb") as file_output,
             open("build.gkeyll.err.txt", "wb") as file_error,
         ):
+            # configure
             option = " ".join(
                 [
                     f"CC={compiler["c"]}",
