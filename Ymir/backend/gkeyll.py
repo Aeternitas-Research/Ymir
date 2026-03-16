@@ -40,6 +40,35 @@ class Gkeyll:
     def build(self):
         self.logger.info("START: Gkeyll.build")
 
+        # MPI
+        mpi_command = (
+            subprocess.run(
+                "mpicc -show",
+                capture_output=True,
+                shell=True,
+                text=True,
+            )
+            .stdout.strip()
+            .split(" ")
+        )
+        CONF_MPI_INC_DIR = [s for s in mpi_command if s[:2] == "-I"][0][2:]
+        CONF_MPI_LIB_DIR = [s for s in mpi_command if s[:2] == "-L"][0][2:]
+
+        # Lua
+        CONF_LUA_INC_DIR = subprocess.run(
+            "pkg-config --cflags-only-I luajit",
+            capture_output=True,
+            shell=True,
+            text=True,
+        ).stdout.strip()[2:]
+        CONF_LUA_LIB_DIR = subprocess.run(
+            "pkg-config --libs-only-L luajit",
+            capture_output=True,
+            shell=True,
+            text=True,
+        ).stdout.strip()[2:]
+
+        # SuperLU
         SUPERLU_INC_DIR = subprocess.run(
             "pkg-config --cflags-only-I superlu",
             capture_output=True,
@@ -48,19 +77,6 @@ class Gkeyll:
         ).stdout.strip()[2:]
         SUPERLU_LIB_DIR = subprocess.run(
             "pkg-config --libs-only-L superlu",
-            capture_output=True,
-            shell=True,
-            text=True,
-        ).stdout.strip()[2:]
-
-        CONF_LUA_INC_DIR = subprocess.run(
-            "pkg-config --cflags-only-I lua",
-            capture_output=True,
-            shell=True,
-            text=True,
-        ).stdout.strip()[2:]
-        CONF_LUA_LIB_DIR = subprocess.run(
-            "pkg-config --libs-only-L lua",
             capture_output=True,
             shell=True,
             text=True,
@@ -79,6 +95,8 @@ class Gkeyll:
             option = [
                 f"--prefix={prefix}",
                 "--use-mpi=yes",
+                f"--mpi-inc={CONF_MPI_INC_DIR}",
+                f"--mpi-lib={CONF_MPI_LIB_DIR}",
                 "--use-lua=yes",
                 f"--lua-inc={CONF_LUA_INC_DIR}",
                 f"--lua-lib={CONF_LUA_LIB_DIR}",
