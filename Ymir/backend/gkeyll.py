@@ -3,6 +3,7 @@ import multiprocessing
 import os
 import subprocess
 from pathlib import Path
+from .tool import dispatch_process
 
 
 class Gkeyll:
@@ -18,17 +19,20 @@ class Gkeyll:
         self.logger.info("START: Gkeyll.clean")
 
         with (
-            open("clean.gkeyll.out.txt", "w") as file_output,
-            open("clean.gkeyll.err.txt", "w") as file_error,
+            open("clean.gkeyll.out.txt", "wb") as file_output,
+            open("clean.gkeyll.err.txt", "wb") as file_error,
         ):
             n = multiprocessing.cpu_count()
-            r = subprocess.run(
+            process = subprocess.Popen(
                 f"make -j{n} -C {self.config["root"]} clean",
                 shell=True,
-                stdout=file_output,
-                stderr=file_error,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
-            if r.returncode:
+            dispatch_process(process, file_output, file_error)
+
+            process.wait()
+            if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
 
         self.logger.info("STOP: Gkeyll.clean")
@@ -54,29 +58,35 @@ class Gkeyll:
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
         with (
-            open("build.gkeyll.out.txt", "w") as file_output,
-            open("build.gkeyll.err.txt", "w") as file_error,
+            open("build.gkeyll.out.txt", "wb") as file_output,
+            open("build.gkeyll.err.txt", "wb") as file_error,
         ):
-            r = subprocess.run(
+            process = subprocess.Popen(
                 f"./configure",
                 shell=True,
                 cwd=self.root,
                 env=env,
-                stdout=file_output,
-                stderr=file_error,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
-            if r.returncode:
+            dispatch_process(process, file_output, file_error)
+
+            process.wait()
+            if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
             n = multiprocessing.cpu_count()
-            r = subprocess.run(
+            process = subprocess.Popen(
                 f"make -j{n} -C {self.config["root"]} all",
                 shell=True,
                 env=env,
-                stdout=file_output,
-                stderr=file_error,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
-            if r.returncode:
+            dispatch_process(process, file_output, file_error)
+
+            process.wait()
+            if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
         self.logger.info("STOP: Gkeyll.build")
@@ -115,17 +125,20 @@ class Gkeyll:
             ]
 
         with (
-            open("test.gkeyll.out.txt", "w") as file_output,
-            open("test.gkeyll.err.txt", "w") as file_error,
+            open("test.gkeyll.out.txt", "wb") as file_output,
+            open("test.gkeyll.err.txt", "wb") as file_error,
         ):
-            r = subprocess.run(
+            process = subprocess.Popen(
                 " && ".join(command),
                 shell=True,
                 cwd=self.root,
-                stdout=file_output,
-                stderr=file_error,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
             )
-            if r.returncode:
+            dispatch_process(process, file_output, file_error)
+
+            process.wait()
+            if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
 
         self.logger.info("STOP: Gkeyll.test")
