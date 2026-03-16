@@ -156,8 +156,9 @@ class Gkeyll:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
             n = multiprocessing.cpu_count()
+            target = " ".join(["everything", "gkeyll-install"])
             process = subprocess.Popen(
-                f"make -j{n} -C {self.root} everything",
+                f"make -j{n} -C {self.root} {target}",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
