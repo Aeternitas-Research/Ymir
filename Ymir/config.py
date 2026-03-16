@@ -64,7 +64,6 @@ class Config:
             "stage": None,
         }
         self.backend = {key: copy.copy(backend_config) for key in BACKEND}
-
         for key, value in self.raw["backend"]["use"].items():
             if key in BACKEND:
                 self.backend[key]["use"] = value
