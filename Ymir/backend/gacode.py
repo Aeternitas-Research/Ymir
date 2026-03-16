@@ -117,6 +117,36 @@ class GACODE:
     def test(self):
         self.logger.info("START: GACODE.test")
 
+        env = self.setup_env()
+
+        command = [
+            "tglf -n 4 -r",
+            "neo -n 4 -nomp 2 -r",
+            "cgyro -n 4 -nomp 2 -r",
+            "gyro -n 4 -nomp 2 -r",
+            "tgyro -n 4 -nomp 2 -r",
+        ]
+        command = [f"echo && {c} || true" for c in command]
+        command = " && ".join(command)
+
+        with (
+            open("test.gacode.out.txt", "wb") as file_output,
+            open("test.gacode.err.txt", "wb") as file_error,
+        ):
+            process = subprocess.Popen(
+                command,
+                shell=True,
+                env=env,
+                cwd=self.root,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            dispatch_process(process, file_output, file_error)
+            process.wait()
+            if process.returncode:
+                self.logger.error("Stage `test` failed")
+                raise RuntimeError("[YMIR] FAIL: GACODE.test")
+
         self.logger.info("STOP: GACODE.test")
 
     def sim(self, sim_config):
