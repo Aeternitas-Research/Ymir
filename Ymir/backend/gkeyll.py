@@ -183,7 +183,7 @@ class Gkeyll:
 
         self.logger.info("STOP: Gkeyll.test")
 
-    def simulation(self):
+    def sim(self, name):
         pass
 
     def report(self):

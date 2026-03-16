@@ -113,7 +113,7 @@ class Hermes3:
 
         self.logger.info("STOP: Hermes3.test")
 
-    def simulation(self):
+    def sim(self, name):
         pass
 
     def report(self):

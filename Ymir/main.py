@@ -18,10 +18,13 @@ def main():
     parser_clean = subparser.add_parser("clean", help="remove backend")
     parser_build = subparser.add_parser("build", help="build backend")
     parser_test = subparser.add_parser("test", help="run tests")
+    parser_sim = subparser.add_parser("sim", help="run simulations")
 
     parser_info.add_argument(
         "-v", "--verbose", action="store_true", help="show verbose info"
     )
+
+    parser_sim.add_argument("name", help="Case name")
 
     arg = parser.parse_args()
     arg.config = Config(arg.input)
@@ -56,6 +59,10 @@ def main():
         from .command import test
 
         test.main(arg)
+    elif arg.command == "sim":
+        from .command import sim
+
+        sim.main(arg)
 
     logger.info("STOP: main")
 
