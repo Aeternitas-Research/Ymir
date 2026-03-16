@@ -60,7 +60,7 @@ class Hermes3:
             open("clean.hermes3.err.txt", "wb") as file_error,
         ):
             process = subprocess.Popen(
-                f"ninja -C {self.root} clean",
+                f"ninja -C {self.root}/build clean",
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
