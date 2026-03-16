@@ -61,7 +61,7 @@ class Config:
             "use": False,
             "root": "",
             "version": "",
-            "stage": None,
+            "backend": None,
         }
         self.backend = {key: copy.copy(backend_config) for key in BACKEND}
         for key, value in self.raw["backend"]["use"].items():
@@ -81,8 +81,8 @@ class Config:
                 # install
                 config["install"] = self.raw["backend"]["install"]
 
-                # stage
-                self.backend[key]["stage"] = get_backend(key, config)
+                # backend
+                self.backend[key]["backend"] = get_backend(key, config)
 
         # simulation
         self.simulation = self.raw["simulation"]

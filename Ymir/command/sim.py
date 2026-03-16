@@ -11,7 +11,7 @@ def main(arg):
 
     for case_config in arg.config.simulation["case"]:
         if (key, case) == (case_config["backend"], case_config["name"]):
-            arg.config.backend[key]["stage"].sim(case_config)
+            arg.config.backend[key]["backend"].sim(case_config)
 
 
 __all__ = ["main"]
