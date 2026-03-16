@@ -45,8 +45,9 @@ class Hermes3:
         self.logger.info("START: Hermes3.clean")
 
         # restore source files
+        target = "CMakeLists.txt"
         r = subprocess.run(
-            "git restore CMakeLists.txt",
+            f"git restore {target}",
             shell=True,
             cwd=self.root,
         )
