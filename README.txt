@@ -7,6 +7,7 @@ Available backends:
 
 Dependencies:
 - GACODE:
+  - MPI
   - fftw: https://packages.spack.io/package.html?name=fftw
   - netcdf-fortran: https://packages.spack.io/package.html?name=netcdf-fortran
   - openblas: https://packages.spack.io/package.html?name=openblas
@@ -16,6 +17,7 @@ Dependencies:
   - openblas: https://packages.spack.io/package.html?name=openblas
   - superlu: https://packages.spack.io/package.html?name=superlu
 - Hermes-3:
+  - MPI
   - adios2: https://pypi.org/project/adios2/
   - boutdata: https://pypi.org/project/boutdata/
   - boututils: https://pypi.org/project/boututils/
