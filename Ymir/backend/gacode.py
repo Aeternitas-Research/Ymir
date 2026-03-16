@@ -117,7 +117,7 @@ class GACODE:
         if env["GACODE_PLATFORM"] == "GFORTRAN_OSX_BREW":
             self.patch("build.fftw")
 
-        if self.config.toolchain["mpi"]["type"] == "mpich":
+        if self.config["toolchain"]["mpi"]["type"] == "mpich":
             self.patch("build.mpich")
 
         with (
