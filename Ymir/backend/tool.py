@@ -12,8 +12,14 @@ def tee(stream, file):
 
 def dispatch_process(process, output, error):
     thread = [
-        threading.Thread(target=tee, args=(process.stdout, output)),
-        threading.Thread(target=tee, args=(process.stderr, error)),
+        threading.Thread(
+            target=tee,
+            args=(process.stdout, output),
+        ),
+        threading.Thread(
+            target=tee,
+            args=(process.stderr, error),
+        ),
     ]
     for t in thread:
         t.start()
