@@ -22,6 +22,12 @@ class GACODE:
             open("patch.gacode.err.txt", "wb") as file_error,
         ):
             if tag == "build.gyro":
+                file_target = self.root / "gyro/install/make.ext.GFORTRAN_OSX_BREW"
+                if os.path.isfile(file_target):
+                    self.logger.warning(f"Patch `{tag}` not applied")
+                    file_error.write(b"Target exists. Stop.")
+                    return
+
                 process = apply_patch(
                     "gacode.build.gyro",
                     self.root,
