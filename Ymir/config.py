@@ -28,7 +28,7 @@ def find_git_version(root):
 
 
 def find_version(handle, root):
-    if handle == "gkeyll":
+    if handle in ("gkeyll", "hermes3"):
         git_hash, git_date = find_git_version(root)
         return f"{git_hash} [{git_date}]"
     else:
@@ -40,6 +40,10 @@ def get_backend(handle, config):
         from .backend.gkeyll import Gkeyll
 
         return Gkeyll(config)
+    elif handle == "hermes3":
+        from .backend.hermes3 import Hermes3
+
+        return Hermes3(config)
     else:
         return None
 
