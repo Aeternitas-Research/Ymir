@@ -125,18 +125,19 @@ class GACODE:
             open("build.gacode.err.txt", "wb") as file_error,
         ):
             # build
-            process = subprocess.Popen(
-                f"make -j1 -C {self.root} all",
-                shell=True,
-                env=env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            dispatch_process(process, file_output, file_error)
-            process.wait()
-            if process.returncode:
-                self.logger.error("Stage `build.build` failed")
-                raise RuntimeError("[YMIR] FAIL: GACODE.build")
+            for target in ("", "le3", "gyro"):
+                process = subprocess.Popen(
+                    f"make -j1 -C {self.root / target} all",
+                    shell=True,
+                    env=env,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                )
+                dispatch_process(process, file_output, file_error)
+                process.wait()
+                if process.returncode:
+                    self.logger.error("Stage `build.build` failed")
+                    raise RuntimeError("[YMIR] FAIL: GACODE.build")
 
         self.logger.info("STOP: GACODE.build")
 
