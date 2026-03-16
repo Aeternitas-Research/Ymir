@@ -49,8 +49,6 @@ class GACODE:
                 if process.returncode:
                     self.logger.warning(f"Patch `{tag}` not applied")
                     raise RuntimeError("[YMIR] FAIL: GACODE.patch")
-
-                self.logger.info(f"Patch `{tag}` applied")
             elif tag == "build.mpich":
                 file_target = self.root / "platform/exec/exec.GFORTRAN_OSX_BREW"
                 if not check_patch(file_target, "7f4520a2"):
@@ -69,11 +67,12 @@ class GACODE:
                     self.logger.warning(f"Patch `{tag}` not applied")
                     raise RuntimeError("[YMIR] FAIL: GACODE.patch")
 
-                self.logger.info(f"Patch `{tag}` applied")
             else:
                 self.logger.error("Invalid tag")
                 file_error.write(b"Invalid tag. Stop.")
                 raise RuntimeError("[YMIR] FAIL: GACODE.patch")
+
+            self.logger.info(f"Patch `{tag}` applied")
 
         self.logger.info(f"STOP: GACODE.patch ({tag})")
 
