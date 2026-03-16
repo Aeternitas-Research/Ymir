@@ -59,10 +59,16 @@ class Hermes3:
             open("clean.hermes3.out.txt", "wb") as file_output,
             open("clean.hermes3.err.txt", "wb") as file_error,
         ):
-            exe = self.find_build_exe()
+            option = " ".join(
+                [
+                    "--build build",
+                    "--target clean",
+                ]
+            )
             process = subprocess.Popen(
-                f"{exe} -C {self.root}/build clean",
+                f"cmake {option}",
                 shell=True,
+                cwd=self.root,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
@@ -117,17 +123,41 @@ class Hermes3:
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
-            exe = self.find_build_exe()
-            target = " ".join(["all", "install"])
+            # build
+            option = " ".join(
+                [
+                    "--build build",
+                ]
+            )
             process = subprocess.Popen(
-                f"{exe} -C {self.root}/build {target}",
+                f"cmake {option}",
                 shell=True,
+                cwd=self.root,
                 env=env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
+            process.wait()
+            if process.returncode:
+                raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
+            # install
+            option = " ".join(
+                [
+                    "--install build",
+                    f"--prefix {prefix}",
+                ]
+            )
+            process = subprocess.Popen(
+                f"cmake {option}",
+                shell=True,
+                cwd=self.root,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
@@ -161,14 +191,6 @@ class Hermes3:
 
     def report(self):
         pass
-
-    def find_build_exe(self):
-        n = multiprocessing.cpu_count()
-        exe = f"make -j{n}"
-        if self.config["toolchain"]["cmake"]["generator"] == "ninja":
-            exe = "ninja"
-
-        return exe
 
 
 __all__ = ["Hermes3"]
