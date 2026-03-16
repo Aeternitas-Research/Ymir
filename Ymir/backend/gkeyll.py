@@ -24,7 +24,7 @@ class Gkeyll:
         ):
             n = multiprocessing.cpu_count()
             process = subprocess.Popen(
-                f"make -j{n} -C {self.config["root"]} clean",
+                f"make -j{n} -C {self.root} clean",
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -77,7 +77,7 @@ class Gkeyll:
 
             n = multiprocessing.cpu_count()
             process = subprocess.Popen(
-                f"make -j{n} -C {self.config["root"]} all",
+                f"make -j{n} -C {self.root} all",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
