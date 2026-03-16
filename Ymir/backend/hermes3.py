@@ -119,8 +119,9 @@ class Hermes3:
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
             exe = self.find_build_exe()
+            target = " ".join(["all", "install"])
             process = subprocess.Popen(
-                f"{exe} -C {self.root}/build all install",
+                f"{exe} -C {self.root}/build {target}",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
