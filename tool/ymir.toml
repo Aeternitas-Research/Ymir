@@ -17,3 +17,8 @@ root = "~/tmp/Ymir/repo/gkeyll"
 
 [backend.config.hermes3]
 root = "~/tmp/Ymir/repo/hermes-3"
+
+[[simulation.case]]
+backend = "gkeyll"
+name = "1X2V_Sheath_BGK"
+input = [ "1X2V_Sheath_BGK.lua" ]

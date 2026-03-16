@@ -84,5 +84,8 @@ class Config:
                 # stage
                 self.backend[key]["stage"] = get_backend(key, config)
 
+        # simulation
+        self.simulation = self.raw["simulation"]
+
 
 __all__ = ["Config"]

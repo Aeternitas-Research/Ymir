@@ -224,8 +224,18 @@ class Gkeyll:
 
         self.logger.info("STOP: Gkeyll.test")
 
-    def sim(self, name):
-        pass
+    def sim(self, sim_config):
+        self.logger.info(f"START: Gkeyll.sim ({sim_config["name"]})")
+
+        from Ymir.simulation.gkeyll import Simulation
+
+        if sim_config["backend"] == "gkeyll":
+            main = Simulation(sim_config)
+            main.start()
+        else:
+            raise RuntimeError("[YMIR] FAIL: Gkeyll.sim")
+
+        self.logger.info(f"STOP: Gkeyll.sim ({sim_config["name"]})")
 
     def report(self):
         pass
