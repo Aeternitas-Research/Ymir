@@ -23,7 +23,7 @@ class Gkeyll:
                 open("patch.gkeyll.err.txt", "wb") as file_error,
             ):
                 file_target = self.root / "gkeyll/lua/Comm/gkyl_mpi_macros.h"
-                if not check_patch(file_target, "470ea451"):
+                if not check_patch(file_target, "470ea4518"):
                     self.logger.warning(f"Patch `{tag}` not applied")
                     file_error.write(b"Invalid target hash. Stop.")
                     return
