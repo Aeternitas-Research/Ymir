@@ -54,6 +54,23 @@ class Hermes3:
         if r.returncode:
             raise RuntimeError("[YMIR] FAIL: Hermes3.clean")
 
+        # remove build
+        with (
+            open("clean.hermes3.out.txt", "wb") as file_output,
+            open("clean.hermes3.err.txt", "wb") as file_error,
+        ):
+            process = subprocess.Popen(
+                f"ninja -C {self.root} clean",
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            dispatch_process(process, file_output, file_error)
+
+            process.wait()
+            if process.returncode:
+                raise RuntimeError("[YMIR] FAIL: Hermes3.clean")
+
         self.logger.info("STOP: Hermes3.clean")
 
     def build(self):
