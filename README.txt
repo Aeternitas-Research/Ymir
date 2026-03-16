@@ -16,4 +16,5 @@ Dependencies:
   - boututils: https://pypi.org/project/boututils/
   - fftw: https://packages.spack.io/package.html?name=fftw
   - netcdf-cxx4: https://packages.spack.io/package.html?name=netcdf-cxx4
+  - py-cython: https://packages.spack.io/package.html?name=py-cython
   - xhermes: https://pypi.org/project/xhermes/
