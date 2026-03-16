@@ -70,11 +70,15 @@ class Gkeyll:
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
+        prefix = self.root / "build" / "gkylsoft"
+
         with (
             open("build.gkeyll.out.txt", "wb") as file_output,
             open("build.gkeyll.err.txt", "wb") as file_error,
         ):
             option = [
+                f"--prefix={prefix}",
+                "--use-mpi=yes",
                 "--use-lua=yes",
                 f"--lua-inc={CONF_LUA_INC_DIR}",
                 f"--lua-lib={CONF_LUA_LIB_DIR}",
