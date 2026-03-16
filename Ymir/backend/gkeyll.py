@@ -36,6 +36,7 @@ class Gkeyll:
                 )
                 process.wait()
                 if process.returncode:
+                    self.logger.warning(f"Patch `{tag}` not applied")
                     raise RuntimeError("[YMIR] FAIL: Gkeyll.patch")
 
                 self.logger.info(f"Patch `{tag}` applied")
@@ -57,6 +58,7 @@ class Gkeyll:
             cwd=self.root,
         )
         if r.returncode:
+            self.logger.error(f"Target {target} not restored")
             raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
 
         self.logger.info(f"Target {target} restored")
