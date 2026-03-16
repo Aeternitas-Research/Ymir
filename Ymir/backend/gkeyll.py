@@ -126,7 +126,7 @@ class Gkeyll:
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
         env["SUPERLU_LIB_DIR"] = SUPERLU_LIB_DIR
 
-        prefix = self.root / "build" / "gkylsoft"
+        prefix = self.root / "build/gkylsoft"
 
         with (
             open("build.gkeyll.out.txt", "wb") as file_output,
