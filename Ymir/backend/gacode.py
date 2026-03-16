@@ -81,8 +81,8 @@ class GACODE:
 
         # restore source files
         target_list = [
-            "platform/build/make.inc.GFORTRAN_OSX_BREW",
             "platform/exec/exec.GFORTRAN_OSX_BREW",
+            "platform/build/make.inc.GFORTRAN_OSX_BREW",
         ]
         for target in target_list:
             r = subprocess.run(
