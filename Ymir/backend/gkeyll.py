@@ -238,13 +238,14 @@ class Gkeyll:
                 f"./build/{module}/unit/{exe} || true"
                 for exe in exe_list
             ]
+        command = " && ".join(command)
 
         with (
             open("test.gkeyll.out.txt", "wb") as file_output,
             open("test.gkeyll.err.txt", "wb") as file_error,
         ):
             process = subprocess.Popen(
-                " && ".join(command),
+                command,
                 shell=True,
                 cwd=self.root,
                 stdout=subprocess.PIPE,
