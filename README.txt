@@ -6,6 +6,8 @@ Available backends:
 
 Dependencies:
 - Gkeyll:
+  - MPI
+  - lua-luajit: https://packages.spack.io/package.html?name=lua-luajit
   - openblas: https://packages.spack.io/package.html?name=openblas
   - superlu: https://packages.spack.io/package.html?name=superlu
 - Hermes-3:
