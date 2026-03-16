@@ -96,6 +96,16 @@ class GACODE:
 
             self.logger.info(f"Target {target} restored")
 
+        # remove untracked files
+        r = subprocess.run(
+            f"git clean -f",
+            shell=True,
+            cwd=self.root,
+        )
+        if r.returncode:
+            self.logger.error(f"Untracked files are not removed")
+            raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
+
         env = self.setup_env()
 
         # remove build
