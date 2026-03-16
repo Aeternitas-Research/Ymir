@@ -17,11 +17,11 @@ class GACODE:
     def patch(self, tag):
         self.logger.info(f"START: GACODE.patch ({tag})")
 
-        if tag == "build.fftw":
-            with (
-                open("patch.gacode.out.txt", "wb") as file_output,
-                open("patch.gacode.err.txt", "wb") as file_error,
-            ):
+        with (
+            open("patch.gacode.out.txt", "wb") as file_output,
+            open("patch.gacode.err.txt", "wb") as file_error,
+        ):
+            if tag == "build.fftw":
                 file_target = self.root / "platform/build/make.inc.GFORTRAN_OSX_BREW"
                 if not check_patch(file_target, "78755cae"):
                     self.logger.warning(f"Patch `{tag}` not applied")
@@ -40,10 +40,29 @@ class GACODE:
                     raise RuntimeError("[YMIR] FAIL: GACODE.patch")
 
                 self.logger.info(f"Patch `{tag}` applied")
-        else:
-            self.logger.error("Invalid tag")
-            file_error.write(b"Invalid tag. Stop.")
-            raise RuntimeError("[YMIR] FAIL: GACODE.patch")
+            elif tag == "build.mpich":
+                file_target = self.root / "platform/exec/exec.GFORTRAN_OSX_BREW"
+                if not check_patch(file_target, "7f4520a2"):
+                    self.logger.warning(f"Patch `{tag}` not applied")
+                    file_error.write(b"Invalid target hash. Stop.")
+                    return
+
+                process = apply_patch(
+                    "gacode.build.mpich",
+                    self.root,
+                    file_output,
+                    file_error,
+                )
+                process.wait()
+                if process.returncode:
+                    self.logger.warning(f"Patch `{tag}` not applied")
+                    raise RuntimeError("[YMIR] FAIL: GACODE.patch")
+
+                self.logger.info(f"Patch `{tag}` applied")
+            else:
+                self.logger.error("Invalid tag")
+                file_error.write(b"Invalid tag. Stop.")
+                raise RuntimeError("[YMIR] FAIL: GACODE.patch")
 
         self.logger.info(f"STOP: GACODE.patch ({tag})")
 
@@ -51,17 +70,21 @@ class GACODE:
         self.logger.info("START: GACODE.clean")
 
         # restore source files
-        target = "platform/build/make.inc.GFORTRAN_OSX_BREW"
-        r = subprocess.run(
-            f"git restore {target}",
-            shell=True,
-            cwd=self.root,
-        )
-        if r.returncode:
-            self.logger.error(f"Target {target} not restored")
-            raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
+        target_list = [
+            "platform/build/make.inc.GFORTRAN_OSX_BREW",
+            "platform/exec/exec.GFORTRAN_OSX_BREW",
+        ]
+        for target in target_list:
+            r = subprocess.run(
+                f"git restore {target}",
+                shell=True,
+                cwd=self.root,
+            )
+            if r.returncode:
+                self.logger.error(f"Target {target} not restored")
+                raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
 
-        self.logger.info(f"Target {target} restored")
+            self.logger.info(f"Target {target} restored")
 
         env = self.setup_env()
 
@@ -93,6 +116,9 @@ class GACODE:
 
         if env["GACODE_PLATFORM"] == "GFORTRAN_OSX_BREW":
             self.patch("build.fftw")
+
+        if self.config.toolchain["mpi"]["type"] == "mpich":
+            self.patch("build.mpich")
 
         with (
             open("build.gacode.out.txt", "wb") as file_output,
