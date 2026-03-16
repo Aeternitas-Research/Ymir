@@ -196,7 +196,7 @@ class Hermes3:
 
         self.logger.info("STOP: Hermes3.test")
 
-    def sim(self, name):
+    def sim(self, sim_config):
         pass
 
     def report(self):
