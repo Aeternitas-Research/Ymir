@@ -9,7 +9,7 @@ BACKEND = (
 )
 
 
-def find_git_version(root):
+def find_version(handle, root):
     git_hash = subprocess.run(
         "git log --pretty=format:'%H' -n 1",
         capture_output=True,
@@ -24,15 +24,8 @@ def find_git_version(root):
         cwd=root.expanduser(),
         text=True,
     ).stdout.strip()
-    return git_hash, git_date
 
-
-def find_version(handle, root):
-    if handle in ("gkeyll", "hermes3"):
-        git_hash, git_date = find_git_version(root)
-        return f"{git_hash} [{git_date}]"
-    else:
-        return "unknown"
+    return f"{git_hash} [{git_date}]"
 
 
 def get_backend(handle, config):
