@@ -53,6 +53,9 @@ class Config:
         with open(file_name, "rb") as file:
             self.raw = tomllib.load(file)
 
+        # toolchain
+        self.toolchain = self.raw["toolchain"]
+
         backend_config = {
             "use": False,
             "root": "",
@@ -70,6 +73,7 @@ class Config:
                 self.backend[key]["version"] = find_version(
                     key, self.backend[key]["root"]
                 )
+                config["toolchain"] = copy.copy(self.toolchain)
                 self.backend[key]["stage"] = get_backend(key, config)
 
 

@@ -59,8 +59,9 @@ class Hermes3:
             open("clean.hermes3.out.txt", "wb") as file_output,
             open("clean.hermes3.err.txt", "wb") as file_error,
         ):
+            exe = self.find_build_exe()
             process = subprocess.Popen(
-                f"ninja -C {self.root}/build clean",
+                f"{exe} -C {self.root}/build clean",
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -84,8 +85,11 @@ class Hermes3:
             open("build.hermes3.out.txt", "wb") as file_output,
             open("build.hermes3.err.txt", "wb") as file_error,
         ):
+            flag_generator = ""
+            if self.config["toolchain"]["cmake"]["generator"] == "ninja":
+                flag_generator = "-GNinja"
             process = subprocess.Popen(
-                "cmake . -B build -GNinja -DBOUT_DOWNLOAD_SUNDIALS=ON",
+                f"cmake . -B build {flag_generator} -DBOUT_DOWNLOAD_SUNDIALS=ON",
                 shell=True,
                 cwd=self.root,
                 env=env,
@@ -98,8 +102,9 @@ class Hermes3:
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
+            exe = self.find_build_exe()
             process = subprocess.Popen(
-                f"ninja -C {self.root}/build all",
+                f"{exe} -C {self.root}/build all",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
@@ -140,6 +145,14 @@ class Hermes3:
 
     def report(self):
         pass
+
+    def find_build_exe(self):
+        n = multiprocessing.cpu_count()
+        exe = f"make -j{n}"
+        if self.config["toolchain"]["cmake"]["generator"] == "ninja":
+            exe = "ninja"
+
+        return exe
 
 
 __all__ = ["Hermes3"]

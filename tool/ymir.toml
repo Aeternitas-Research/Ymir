@@ -2,6 +2,9 @@
 min = "0.1.0"
 max = "0.1.0"
 
+[toolchain.cmake]
+generator = "ninja"
+
 [backend.use]
 gkeyll = true
 hermes3 = true
