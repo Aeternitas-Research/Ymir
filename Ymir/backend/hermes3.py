@@ -90,6 +90,7 @@ class Hermes3:
             open("build.hermes3.out.txt", "wb") as file_output,
             open("build.hermes3.err.txt", "wb") as file_error,
         ):
+            # configure
             flag_generator = ""
             if self.config["toolchain"]["cmake"]["generator"] == "ninja":
                 flag_generator = "-GNinja"
