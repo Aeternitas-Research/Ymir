@@ -62,7 +62,7 @@ class Gkeyll:
             open("build.gkeyll.err.txt", "wb") as file_error,
         ):
             process = subprocess.Popen(
-                f"./configure",
+                "./configure",
                 shell=True,
                 cwd=self.root,
                 env=env,
