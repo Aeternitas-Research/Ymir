@@ -7,7 +7,7 @@ def main(arg):
     print("Backend:")
     for key, config in arg.config.backend.items():
         if config["use"]:
-            print(f"  {key}: {config["version"]}")
+            print(f"  {key:>7}: {config["version"]}")
 
 
 __all__ = ["main"]
