@@ -174,9 +174,8 @@ class Gkeyll:
 
             # build
             n = multiprocessing.cpu_count()
-            target = " ".join(["everything"])
             process = subprocess.Popen(
-                f"make -j{n} -C {self.root} {target}",
+                f"make -j{n} -C {self.root} everything",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
@@ -190,9 +189,8 @@ class Gkeyll:
 
             # install
             n = multiprocessing.cpu_count()
-            target = " ".join(["gkeyll-install"])
             process = subprocess.Popen(
-                f"make -j{n} -C {self.root} {target}",
+                f"make -j{n} -C {self.root} gkeyll-install",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
