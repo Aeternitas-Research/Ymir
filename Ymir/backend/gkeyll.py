@@ -157,7 +157,6 @@ class Gkeyll:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
@@ -173,7 +172,6 @@ class Gkeyll:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
@@ -189,7 +187,6 @@ class Gkeyll:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")

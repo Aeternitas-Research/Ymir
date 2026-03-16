@@ -93,7 +93,6 @@ class Hermes3:
             flag_generator = ""
             if self.config["toolchain"]["cmake"]["generator"] == "ninja":
                 flag_generator = "-GNinja"
-
             option = " ".join(
                 [
                     "-S .",
@@ -113,7 +112,6 @@ class Hermes3:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
