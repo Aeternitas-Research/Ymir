@@ -12,6 +12,8 @@ class Gkeyll:
         self.config = config
         self.root = Path(self.config["root"]).expanduser()
 
+        self.logger.info("Backend `gkeyll` initialized")
+
     def patch(self, tag):
         self.logger.info(f"START: Gkeyll.patch ({tag})")
 
@@ -22,6 +24,7 @@ class Gkeyll:
             ):
                 file_target = self.root / "gkeyll/lua/Comm/gkyl_mpi_macros.h"
                 if not check_patch(file_target, "470ea451"):
+                    self.logger.warning(f"Patch `{tag}` not applied")
                     file_error.write(b"Invalid target hash. Stop.")
                     return
 
@@ -31,11 +34,13 @@ class Gkeyll:
                     file_output,
                     file_error,
                 )
-
                 process.wait()
                 if process.returncode:
                     raise RuntimeError("[YMIR] FAIL: Gkeyll.patch")
+
+                self.logger.info(f"Patch `{tag}` applied")
         else:
+            self.logger.error("Invalid tag")
             file_error.write(b"Invalid tag. Stop.")
             raise RuntimeError("[YMIR] FAIL: Gkeyll.patch")
 
@@ -54,6 +59,8 @@ class Gkeyll:
         if r.returncode:
             raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
 
+        self.logger.info(f"Target {target} restored")
+
         # remove build
         with (
             open("clean.gkeyll.out.txt", "wb") as file_output,
@@ -67,9 +74,9 @@ class Gkeyll:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `clean` failed")
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.clean")
 
         self.logger.info("STOP: Gkeyll.clean")
@@ -90,11 +97,12 @@ class Gkeyll:
         )
         CONF_MPI_INC_DIR = [s for s in mpi_command if s[:2] == "-I"][0][2:]
         CONF_MPI_LIB_DIR = [s for s in mpi_command if s[:2] == "-L"][0][2:]
+        self.logger.info("Found dependency: MPI")
 
         if "mpich" in CONF_MPI_LIB_DIR:
             self.patch("build.mpich")
 
-        # Lua
+        # LuaJIT
         CONF_LUA_INC_DIR = subprocess.run(
             "pkg-config --cflags-only-I luajit",
             capture_output=True,
@@ -107,6 +115,7 @@ class Gkeyll:
             shell=True,
             text=True,
         ).stdout.strip()[2:]
+        self.logger.info("Found dependency: LuaJIT")
 
         # SuperLU
         SUPERLU_INC_DIR = subprocess.run(
@@ -121,6 +130,7 @@ class Gkeyll:
             shell=True,
             text=True,
         ).stdout.strip()[2:]
+        self.logger.info("Found dependency: SuperLU")
 
         env = os.environ.copy()
         env["SUPERLU_INC_DIR"] = SUPERLU_INC_DIR
@@ -159,6 +169,7 @@ class Gkeyll:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.configure` failed")
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
             # build
@@ -174,6 +185,7 @@ class Gkeyll:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.build` failed")
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
             # install
@@ -189,6 +201,7 @@ class Gkeyll:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.install` failed")
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.build")
 
         self.logger.info("STOP: Gkeyll.build")
@@ -241,6 +254,7 @@ class Gkeyll:
 
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `test` failed")
                 raise RuntimeError("[YMIR] FAIL: Gkeyll.test")
 
         self.logger.info("STOP: Gkeyll.test")
@@ -254,6 +268,7 @@ class Gkeyll:
             main = Simulation(sim_config)
             main.start()
         else:
+            self.logger.error("Stage `sim` failed")
             raise RuntimeError("[YMIR] FAIL: Gkeyll.sim")
 
         self.logger.info(f"STOP: Gkeyll.sim ({sim_config["name"]})")

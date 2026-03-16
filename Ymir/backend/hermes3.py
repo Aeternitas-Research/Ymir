@@ -12,6 +12,8 @@ class Hermes3:
         self.config = config
         self.root = Path(self.config["root"]).expanduser()
 
+        self.logger.info("Backend `hermes3` initialized")
+
     def patch(self, tag):
         self.logger.info(f"START: Hermes3.patch ({tag})")
 
@@ -22,6 +24,7 @@ class Hermes3:
             ):
                 file_target = self.root / "CMakeLists.txt"
                 if not check_patch(file_target, "eda7acae"):
+                    self.logger.warning(f"Patch `{tag}` not applied")
                     file_error.write(b"Invalid target hash. Stop.")
                     return
 
@@ -31,11 +34,13 @@ class Hermes3:
                     file_output,
                     file_error,
                 )
-
                 process.wait()
                 if process.returncode:
                     raise RuntimeError("[YMIR] FAIL: Hermes3.patch")
+
+                self.logger.info(f"Patch `{tag}` applied")
         else:
+            self.logger.error("Invalid tag")
             file_error.write(b"Invalid tag. Stop.")
             raise RuntimeError("[YMIR] FAIL: Hermes3.patch")
 
@@ -53,6 +58,8 @@ class Hermes3:
         )
         if r.returncode:
             raise RuntimeError("[YMIR] FAIL: Hermes3.clean")
+
+        self.logger.info(f"Target {target} restored")
 
         # remove build
         with (
@@ -73,9 +80,9 @@ class Hermes3:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `clean` failed")
                 raise RuntimeError("[YMIR] FAIL: Hermes3.clean")
 
         self.logger.info("STOP: Hermes3.clean")
@@ -121,6 +128,7 @@ class Hermes3:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.configure` failed")
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
             # build
@@ -140,6 +148,7 @@ class Hermes3:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.build` failed")
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
             # install
@@ -160,6 +169,7 @@ class Hermes3:
             dispatch_process(process, file_output, file_error)
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `build.install` failed")
                 raise RuntimeError("[YMIR] FAIL: Hermes3.build")
 
         self.logger.info("STOP: Hermes3.build")
@@ -179,9 +189,9 @@ class Hermes3:
                 stderr=subprocess.PIPE,
             )
             dispatch_process(process, file_output, file_error)
-
             process.wait()
             if process.returncode:
+                self.logger.error("Stage `test` failed")
                 raise RuntimeError("[YMIR] FAIL: Hermes3.test")
 
         self.logger.info("STOP: Hermes3.test")
