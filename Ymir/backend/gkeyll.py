@@ -117,7 +117,7 @@ class Gkeyll:
 
             n = multiprocessing.cpu_count()
             process = subprocess.Popen(
-                f"make -j{n} -C {self.root} all",
+                f"make -j{n} -C {self.root} everything gkeyll-install",
                 shell=True,
                 env=env,
                 stdout=subprocess.PIPE,
