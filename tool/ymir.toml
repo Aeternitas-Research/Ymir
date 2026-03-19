@@ -1,0 +1,50 @@
+[version]
+min = "0.1.0"
+max = "0.1.0"
+
+[toolchain.fortran]
+compiler.f77 = "/opt/homebrew/bin/gfortran"
+compiler.f90 = "/opt/homebrew/bin/gfortran"
+
+[toolchain.c]
+compiler = "/opt/homebrew/opt/llvm/bin/clang"
+
+[toolchain.cpp]
+compiler = "/opt/homebrew/opt/llvm/bin/clang++"
+
+[toolchain.mpi]
+type = "mpich"
+compiler.f77 = "/opt/homebrew/bin/mpif77"
+compiler.f90 = "/opt/homebrew/bin/mpif90"
+compiler.c = "/opt/homebrew/bin/mpicc"
+compiler.cpp = "/opt/homebrew/bin/mpicxx"
+exec = "/opt/homebrew/bin/mpirun"
+
+[toolchain.cmake]
+generator = "ninja"
+
+[backend.use]
+gacode = true
+gkeyll = true
+hermes3 = true
+
+[backend.install]
+prefix = "~/tmp/Ymir"
+
+[backend.config.gacode]
+root = "~/tmp/Ymir/repo/gacode"
+env.GACODE_PLATFORM = "GFORTRAN_OSX_BREW"
+env.BREW_LIB = "/opt/homebrew/lib"
+env.FFTW_INC = "/opt/homebrew/include"
+env.NETCDF_INC = "/opt/homebrew/include"
+
+[backend.config.gkeyll]
+root = "~/tmp/Ymir/repo/gkeyll"
+
+[backend.config.hermes3]
+root = "~/tmp/Ymir/repo/hermes-3"
+
+[[simulation.case]]
+backend = "gkeyll"
+name = "1X2V_Sheath_BGK"
+input = [ "1X2V_Sheath_BGK.lua" ]

@@ -1,0 +1,10 @@
+diff --git a/gyro/install/make.ext.GFORTRAN_OSX_BREW b/gyro/install/make.ext.GFORTRAN_OSX_BREW
+new file mode 100644
+index 00000000..aaf9436e
+--- /dev/null
++++ b/gyro/install/make.ext.GFORTRAN_OSX_BREW
+@@ -0,0 +1,4 @@
++gyro_nl_setup.o : gyro_nl_setup.legacy.f90
++	$(FC) $(FMATH) $(FFLAGS) -o gyro_nl_setup.o -c gyro_nl_setup.legacy.f90
++gyro_nl_fft.o : gyro_nl_fft.legacy.f90
++	$(FC) $(FMATH) $(FFLAGS) -o gyro_nl_fft.o -c gyro_nl_fft.legacy.f90

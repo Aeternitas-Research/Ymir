@@ -1,0 +1,15 @@
+diff --git a/gkeyll/lua/Comm/gkyl_mpi_macros.h b/gkeyll/lua/Comm/gkyl_mpi_macros.h
+index 470ea4518..ba99ac313 100644
+--- a/gkeyll/lua/Comm/gkyl_mpi_macros.h
++++ b/gkeyll/lua/Comm/gkyl_mpi_macros.h
+@@ -7,6 +7,10 @@
+ 
+ #pragma once
+ 
++#ifndef MPI_UNWEIGHTED
++#define MPI_UNWEIGHTED ((int*)10)
++#endif
++
+ // Macros to declare/define functions to get MPI objects
+ #define GET_MPI_OBJECT(type, value) MPI_##type get_##value() { return value; }
+ #define DECL_GET_MPI_OBJECT(type, value) MPI_##type get_##value()

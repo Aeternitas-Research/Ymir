@@ -1,0 +1,27 @@
+[project]
+name = "Ymir"
+description = ""
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+
+dependencies = [
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+]
+
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "Ymir.version.YMIR_VERSION"}
+
+[project.scripts]
+ymir = "Ymir:main"
+
+[project.urls]
+homepage = "https://github.com/Aeternitas-Research/Ymir"
+repository = "https://github.com/Aeternitas-Research/Ymir"
+issues = "https://github.com/Aeternitas-Research/Ymir/issues"
+
+[tool.setuptools]
+packages = ["Ymir"]
